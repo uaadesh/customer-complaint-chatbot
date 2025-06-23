@@ -1,0 +1,40 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Environment
+.env
+.venv/
+venv/
+env/
+
+# Byte-compiled
+*.so
+
+# SQLite database
+*.db
+
+# VSCode, PyCharm, etc.
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# FAISS or vector DB dumps (if saved)
+vectorstore/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Streamlit
+.streamlit/
+
+# Temporary files
+*.tmp

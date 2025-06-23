@@ -1,0 +1,73 @@
+Company Overview:
+VegaKart is a leading e-commerce platform delivering products across India. We specialize in fast, reliable, and affordable delivery of electronics, fashion, groceries, and household essentials. Our mission is to simplify shopping and create delightful customer experiences.
+
+Operating Hours:
+Our customer support team is available 7 days a week, from 9:00 AM to 9:00 PM IST. Complaints can be filed anytime using our automated chatbot system.
+
+Delivery Timelines:
+Standard delivery takes 3–5 business days. Express delivery options are available for select items. Delays can occur due to weather, festivals, or unforeseen logistical issues.
+
+Returns and Refunds:
+We offer a 7-day return policy on most items. Refunds are initiated within 48 hours of successful return pickup and may take up to 5 business days to reflect in your account.
+
+Complaint Process:
+If you face an issue, you can file a complaint by providing:
+- Your full name
+- A 10-digit phone number
+- A valid email address
+- A description of your issue
+
+Once submitted, your complaint is logged with a unique complaint ID. You will receive this ID as confirmation. You can use it later to retrieve complaint details or track progress.
+
+Types of Issues You Can Report:
+- Damaged or defective items
+- Delayed delivery
+- Wrong product received
+- Refund not received
+- Technical issue with the website or app
+- Payment deduction without order confirmation
+
+How the Complaint Chatbot Works:
+Our chatbot can:
+- File complaints on your behalf
+- Retrieve complaint status using your complaint ID
+- Answer questions based on company policy, delivery, returns, and more
+
+It will guide you step-by-step and ask for missing information politely. Once enough details are gathered, your complaint will be submitted automatically.
+
+Complaint Escalation:
+If your issue remains unresolved for 3 or more business days, it is automatically escalated to a senior support executive. You can also mention “escalate” in the chat to trigger priority handling.
+
+Communication Channels:
+Besides this chatbot, you can also contact us via:
+- Email: support@vegakart.in
+- Phone: 1800-123-VEGA (8342)
+- Live chat on our website during working hours
+
+Data Privacy:
+We are committed to safeguarding your information. Complaint data is stored securely and used only for resolving customer issues. We never share your information with third-party advertisers.
+
+Common Questions:
+
+Q: Can I file a complaint without logging in?
+A: Yes, the chatbot allows anyone to file a complaint, even without logging into your VegaKart account.
+
+Q: How long will it take to resolve my complaint?
+A: Simple complaints (e.g., delay or refund status) are usually resolved within 24–48 hours. More complex issues may take up to 5 business days.
+
+Q: Can I modify a complaint once it's submitted?
+A: Currently, modifications are not supported via chatbot. Please email support@vegakart.in for any corrections.
+
+Q: Is the complaint ID confidential?
+A: The complaint ID is unique but not private. Anyone with your ID can view complaint details, so please keep it safe.
+
+Q: Can I get updates on my complaint?
+A: Yes. The chatbot can retrieve and show your complaint details at any time using your ID.
+
+Tips for Faster Resolution:
+- Always provide a clear and detailed description of the issue
+- Double-check your contact details for accuracy
+- Use the same phone number and email if you've contacted us before
+
+Thank you for shopping with VegaKart!
+Your satisfaction is our priority.
