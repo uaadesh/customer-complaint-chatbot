@@ -7,7 +7,15 @@ tools it called and what it saved, and scores the result.
 Usage (from the repo root, with Ollama and the backend running):
     python evals/run_eval.py --name v0-baseline
     python evals/run_eval.py --name debug --only en-file-001,hi-faq-001
-    python evals/run_eval.py --name bench-qwen3-4b-instruct --model qwen3:4b-instruct
+    python evals/run_eval.py --name v0.1-qwen3-4b-instruct --model qwen3:4b-instruct
+
+All runs are stored in ONE combined file (--out, default
+evals/results/v0-benchmark.json): each run is added under its --name, and a
+run with the same name replaces the old one. The file starts with an "index"
+of every run's headline numbers, followed by the full details per run.
+
+Fold existing single-run result files into the combined file:
+    python evals/run_eval.py --merge evals/results/v0-baseline.json evals/results/v0.1-*.json
 
 Scores per conversation:
     tool_correct  - the expected tool was called with the expected arguments
@@ -170,13 +178,63 @@ def rate(items, key):
     return round(sum(i[key] for i in items) / len(items), 3) if items else None
 
 
+# ---------------------------------------------------------------------------
+# Combined results file: {"index": [headline per run], "runs": {name: run}}
+# ---------------------------------------------------------------------------
+def load_combined(path: Path) -> dict:
+    if path.exists():
+        return json.loads(path.read_text(encoding="utf-8"))
+    return {"index": [], "runs": {}}
+
+
+def save_combined(path: Path, combined: dict) -> None:
+    # Rebuild the index so it always matches the runs below it.
+    combined["index"] = [
+        {
+            "name": name,
+            "model": r["run"]["model"],
+            "git_commit": r["run"]["git_commit"],
+            "test_file": r["run"]["test_file"],
+            "task_success": r["summary"]["task_success"],
+            "tool_correct": r["summary"]["tool_correct"],
+            "p50_seconds": r["summary"]["turn_latency_seconds"]["p50"],
+            "p95_seconds": r["summary"]["turn_latency_seconds"]["p95"],
+        }
+        for name, r in combined["runs"].items()
+    ]
+    path.parent.mkdir(parents=True, exist_ok=True)
+    ordered = {"index": combined["index"], "runs": combined["runs"]}  # index first, easy to read
+    path.write_text(json.dumps(ordered, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def merge_files(files: list[str], out_path: Path) -> None:
+    combined = load_combined(out_path)
+    for f in files:
+        run = json.loads(Path(f).read_text(encoding="utf-8"))
+        combined["runs"][run["run"]["name"]] = run
+        print(f"merged {run['run']['name']}")
+    save_combined(out_path, combined)
+    print(f"{len(combined['runs'])} runs in {out_path.relative_to(REPO_ROOT)}")
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--name", required=True, help="run name, e.g. v0-baseline")
+    parser.add_argument("--name", help="run name, e.g. v0-baseline (required unless --merge)")
     parser.add_argument("--tests", default="evals/conversations/baseline.jsonl")
     parser.add_argument("--only", help="comma-separated conversation ids to run")
     parser.add_argument("--model", help="Ollama model to use instead of the bot's default, e.g. qwen3:4b-instruct")
+    parser.add_argument("--out", default="evals/results/v0-benchmark.json",
+                        help="combined results file that every run is added to")
+    parser.add_argument("--merge", nargs="+", metavar="FILE",
+                        help="add existing single-run result files to --out, then exit")
     args = parser.parse_args()
+    out_path = REPO_ROOT / args.out
+
+    if args.merge:
+        merge_files(args.merge, out_path)
+        return
+    if not args.name:
+        parser.error("--name is required")
 
     tests = [json.loads(line) for line in open(REPO_ROOT / args.tests, encoding="utf-8") if line.strip()]
     if args.only:
@@ -245,13 +303,15 @@ def main():
         "summary": summary,
         "conversations": results,
     }
-    out_path = REPO_ROOT / "evals" / "results" / f"{args.name}.json"
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps(output, indent=2, ensure_ascii=False), encoding="utf-8")
+    # Re-read the combined file just before writing, so runs added by another
+    # process while this one was running are kept.
+    combined = load_combined(out_path)
+    combined["runs"][args.name] = output
+    save_combined(out_path, combined)
 
     print(f"\nTask success: {summary['task_success']:.0%}   Tool correct: {summary['tool_correct']:.0%}   "
           f"p50/p95 turn: {summary['turn_latency_seconds']['p50']}s / {summary['turn_latency_seconds']['p95']}s")
-    print(f"Saved to {out_path.relative_to(REPO_ROOT)}")
+    print(f"Saved as run '{args.name}' in {out_path.relative_to(REPO_ROOT)}")
 
 
 def _group(items, key):
