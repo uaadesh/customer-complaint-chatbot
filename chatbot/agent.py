@@ -21,7 +21,8 @@ def get_local_llm(model_name="llama3.2:3b"):
     return ChatOllama(
         model=model_name,
         base_url="http://127.0.0.1:11434",
-        temperature=0.3,
+        temperature=0,    # deterministic: the same question gets the same answer every run
+        num_predict=512,  # cap reply length so a model stuck in a loop can't run for minutes
     )
 
 
@@ -99,7 +100,10 @@ def build_agent():
         messages.append(HumanMessage(content=user_input))
 
         response = llm.invoke(messages)
-        llm_output = response.content.strip()
+        # Thinking models (e.g. qwen3.5) may put their reasoning in <think>...</think>
+        # before the answer. Drop it, including an unclosed <think> cut off by the
+        # length cap, so only the actual answer is parsed and shown.
+        llm_output = re.sub(r"<think>.*?(</think>|$)", "", response.content, flags=re.DOTALL).strip()
 
         return {
             "state": {
@@ -119,7 +123,9 @@ def build_agent():
             # Extract JSON from LLM output
             json_start = llm_output.find("{")
             json_str = llm_output[json_start:] if json_start >= 0 else ""
-            parsed = json.loads(json_str)
+            # raw_decode reads the first complete JSON object and ignores anything
+            # after it, e.g. a closing ``` fence or extra sentences from the model.
+            parsed, _ = json.JSONDecoder().raw_decode(json_str)
 
             action = parsed.get("action")
             tool_input = parsed.get("input")
