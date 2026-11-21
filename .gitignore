@@ -38,3 +38,8 @@ Thumbs.db
 
 # Temporary files
 *.tmp
+# Claude Code / local planning docs (not for GitHub)
+CLAUDE.md
+PLAN.md
+notes/
+.claude/
