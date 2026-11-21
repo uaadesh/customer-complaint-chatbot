@@ -1,6 +1,7 @@
 # chatbot/agent.py
 
 import json
+import re
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, BaseMessage
 from langgraph.graph import StateGraph, END
 from langchain.memory import ConversationBufferMemory
@@ -131,7 +132,13 @@ def build_agent():
 
                 # Format human-friendly output based on action
                 if action == "create_complaint_tool":
-                    final_output = f"✅ Your complaint has been registered successfully. We’ll get back to you shortly. Here is your complaint ID: {result.split(':')[-1].strip()}"
+                    # Only claim success if the tool actually returned an ID,
+                    # e.g. "✅ Complaint created successfully (ID: 1DCE63BD)".
+                    match = re.search(r"\(ID: ([A-Z0-9]+)\)", result)
+                    if match:
+                        final_output = f"✅ Your complaint has been registered successfully. We’ll get back to you shortly. Here is your complaint ID: {match.group(1)}"
+                    else:
+                        final_output = "❌ Sorry, I couldn't register your complaint. Please check your name, 10-digit phone number, email and complaint details, and try again."
                 elif action == "get_complaint_tool":
                     if "Complaint ID" in result:
                         # Extract & format details nicely

@@ -12,15 +12,19 @@ def create_complaint_tool(data: str) -> str:
     
     Input (str): A comma-separated string of 4 values:
         "name, phone_number, email, complaint_details"
-    
+    Only the first 3 commas separate fields, so the complaint details
+    may themselves contain commas.
+
     Example:
-        "Deepak, 9876543210, deepak@example.com, Order not delivered"
-    
+        "Deepak, 9876543210, deepak@example.com, Order late, box damaged"
+
     Returns:
         str: Success or error message
     """
     try:
-        parts = [x.strip() for x in data.split(",")]
+        # maxsplit=3: name, phone and email never contain commas, so everything
+        # after the third comma is the complaint text, commas included.
+        parts = [x.strip() for x in data.split(",", 3)]
         if len(parts) != 4:
             return "Error: Please provide exactly 4 comma-separated fields: name, phone, email, details."
 
