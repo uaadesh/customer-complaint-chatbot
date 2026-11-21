@@ -7,6 +7,7 @@ tools it called and what it saved, and scores the result.
 Usage (from the repo root, with Ollama and the backend running):
     python evals/run_eval.py --name v0-baseline
     python evals/run_eval.py --name debug --only en-file-001,hi-faq-001
+    python evals/run_eval.py --name bench-qwen3-4b-instruct --model qwen3:4b-instruct
 
 Scores per conversation:
     tool_correct  - the expected tool was called with the expected arguments
@@ -96,11 +97,19 @@ def recording(name, real_tool):
     return wrapper
 
 
-def build_recorded_agent():
+def build_recorded_agent(model: str | None):
     import chatbot.agent as agent_module
     for name in ("create_complaint_tool", "get_complaint_tool"):
         setattr(agent_module, name, recording(name, getattr(agent_module, name)))
-    return agent_module.build_agent(), agent_module
+
+    # build_agent() calls get_local_llm() with no arguments, so it always gets
+    # the default model. To benchmark another model without editing the bot,
+    # replace get_local_llm with a version whose default is the chosen model.
+    default_model = inspect.signature(agent_module.get_local_llm).parameters["model_name"].default
+    if model and model != default_model:
+        original = agent_module.get_local_llm
+        agent_module.get_local_llm = lambda model_name=model: original(model_name)
+    return agent_module.build_agent(), model or default_model
 
 
 # ---------------------------------------------------------------------------
@@ -166,6 +175,7 @@ def main():
     parser.add_argument("--name", required=True, help="run name, e.g. v0-baseline")
     parser.add_argument("--tests", default="evals/conversations/baseline.jsonl")
     parser.add_argument("--only", help="comma-separated conversation ids to run")
+    parser.add_argument("--model", help="Ollama model to use instead of the bot's default, e.g. qwen3:4b-instruct")
     args = parser.parse_args()
 
     tests = [json.loads(line) for line in open(REPO_ROOT / args.tests, encoding="utf-8") if line.strip()]
@@ -174,8 +184,8 @@ def main():
         tests = [t for t in tests if t["id"] in wanted]
 
     preflight()
-    print("Building agent...")
-    agent, agent_module = build_recorded_agent()
+    agent, model = build_recorded_agent(args.model)
+    print(f"Built agent with model {model}")
 
     results = []
     for i, conv in enumerate(tests, 1):
@@ -229,7 +239,7 @@ def main():
             "name": args.name,
             "timestamp": datetime.now().isoformat(timespec="seconds"),
             "git_commit": commit,
-            "model": inspect.signature(agent_module.get_local_llm).parameters["model_name"].default,
+            "model": model,
             "test_file": args.tests,
         },
         "summary": summary,
