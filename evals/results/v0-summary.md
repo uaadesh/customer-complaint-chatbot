@@ -99,3 +99,38 @@ The automatic checks missed off-topic mistakes, such as writing the requested cr
 - **Known weaknesses to fix next:**
   - policy answers, by connecting the FAQ;
   - carrying out off-topic requests, by adding guardrails.
+
+## Phase 2: retrieval benchmark
+
+Can the bot find the policy section that answers a question? This was tested before connecting retrieval to the bot.
+
+| | |
+|---|---|
+| Knowledge base | 6 policy documents in [`knowledge-base/policies/`](../../knowledge-base/policies/), split at their `##` headings into 43 sections, all in English |
+| Questions | The 60 FAQ conversations in `test_set.jsonl` (20 English, 20 Hindi, 20 Hinglish), each labelled with the section(s) that answer it |
+| Scoring | **R@3 / R@4**: a correct section is in the top 3 / top 4 results. **R@1**: it is the top result. Search time is for one question on the CPU. |
+| Script | [`evals/run_retrieval.py`](../run_retrieval.py), which uses the bot's own retriever code. Full results are in the `retrieval` block of [v0-benchmark.json](v0-benchmark.json) (run `p2-retrieval-v1`). |
+
+| Retriever | R@1 | R@3 | R@4 | English R@3 | Hindi R@3 | Hinglish R@3 | Search time |
+|---|---|---|---|---|---|---|---|
+| English embeddings (all-MiniLM-L6-v2, used before Phase 2) | 42% | 53% | 58% | 90% | **5%** | 65% | 21 ms |
+| BM25 keyword search | 33% | 47% | 50% | 60% | 15% | 65% | 0.2 ms |
+| Multilingual MiniLM | 53% | 80% | 83% | 80% | 90% | 70% | 35 ms |
+| multilingual-e5-small | 65% | 87% | 92% | 85% | 95% | 80% | 38 ms |
+| **multilingual-e5-base** | **77%** | **92%** | 95% | **95%** | **95%** | 85% | 140 ms |
+| Hybrid: BM25 + e5-base (RRF) | 63% | 85% | 90% | 85% | 95% | 75% | 137 ms |
+| e5-base + reranker | 75% | 88% | **97%** | 85% | 85% | 95% | 456 ms |
+| Hybrid: BM25 + e5-base + reranker | 75% | **92%** | 95% | 90% | 85% | **100%** | 410 ms |
+
+The reranker is `mmarco-mMiniLMv2-L12-H384-v1`, a multilingual model trained with Hindi data.
+
+- **The old retriever could not handle Hindi.** It found the right section for 1 of 20 Hindi questions. Every multilingual model fixes this.
+- **Hybrid search made results worse.** For reworded questions, such as "Can I return my phone if I just don't like it?", BM25 ranks the wrong sections highly and pulls the right one down. Keyword search helps most with large document sets full of codes and product names. Ours has 43 short sections in plain language.
+- **The reranker did not improve on e5-base alone,** and is about 3× slower on the CPU that the LLM also needs. Search times vary by about 30% between runs.
+- **Most remaining misses are broad questions,** such as "what is your return policy?". Several return sections fit, and the right one ranks 4th to 7th.
+- **Limits:**
+  - 20 questions per language, so one question is 5 points, and the top setups are effectively tied.
+  - The questions and documents were written by the same author, so real customer questions will probably score lower.
+  - A bug in the first trial made hybrid search look much worse on Hindi: BM25 returned arbitrary sections when nothing matched. It was fixed before this run.
+
+**Decision: multilingual-e5-base alone, giving the bot the top 4 sections.** It is the most accurate, and simpler and faster than the alternatives. It uses about 1.1 GB of RAM; e5-small is the fallback if memory runs short. Hybrid search and the reranker remain available as server settings (`RETRIEVAL_HYBRID=1`, `RETRIEVAL_RERANK=1` in [`chatbot/config.py`](../../chatbot/config.py)), so they can be re-tested as the knowledge base grows.
