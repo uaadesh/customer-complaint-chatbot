@@ -5,12 +5,10 @@ import re
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, BaseMessage
 from langgraph.graph import StateGraph, END
 from langchain.memory import ConversationBufferMemory
-from langchain.chains import RetrievalQA
 from langchain_ollama import ChatOllama
 from langchain_community.llms import OpenAI
 
 from chatbot.config import use_openai, OPENAI_API_KEY
-from chatbot.rag_retriever import build_retriever
 from chatbot.tools import create_complaint_tool, get_complaint_tool
 
 
@@ -34,8 +32,7 @@ def get_local_llm(model_name="gemma4:e2b"):
 
 def build_agent():
     """
-    Builds the LangGraph-powered RAG agent with:
-    - RAG for general knowledge-based answers
+    Builds the LangGraph-powered agent with:
     - Tool usage for complaint creation and retrieval
     - Structured memory
     - JSON-based tool invocation
@@ -77,13 +74,9 @@ def build_agent():
     # Choose LLM backend
     llm = OpenAI(temperature=0, openai_api_key=OPENAI_API_KEY) if use_openai else get_local_llm()
 
-    # Build RAG retriever QA system
-    retriever = build_retriever()
-    qa = RetrievalQA.from_chain_type(llm=llm, retriever=retriever)
-
-    # Tool registry
+    # Tool registry. Policy retrieval (chatbot/rag_retriever.py) is not connected yet:
+    # the old "GeneralQA" tool was never called by the prompt and was removed in Phase 2.
     tools = {
-        "GeneralQA": qa.run,
         "create_complaint_tool": create_complaint_tool,
         "get_complaint_tool": get_complaint_tool,
     }

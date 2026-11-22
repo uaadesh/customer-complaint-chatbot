@@ -203,7 +203,9 @@ def save_combined(path: Path, combined: dict) -> None:
         for name, r in combined["runs"].items()
     ]
     path.parent.mkdir(parents=True, exist_ok=True)
-    ordered = {"index": combined["index"], "runs": combined["runs"]}  # index first, easy to read
+    # Index first, easy to read. Keep other blocks (e.g. "retrieval" from run_retrieval.py).
+    ordered = {"index": combined["index"], "runs": combined["runs"],
+               **{k: v for k, v in combined.items() if k not in ("index", "runs")}}
     path.write_text(json.dumps(ordered, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
