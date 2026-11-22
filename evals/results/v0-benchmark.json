@@ -69,6 +69,26 @@
       "tool_correct": 0.556,
       "p50_seconds": 65.27,
       "p95_seconds": 96.8
+    },
+    {
+      "name": "exp-gemma4-e2b-gpu",
+      "model": "gemma4-e2b-gpu",
+      "git_commit": "6aab572",
+      "test_file": "evals/conversations/v1.jsonl",
+      "task_success": 0.704,
+      "tool_correct": 1.0,
+      "p50_seconds": 4.13,
+      "p95_seconds": 7.28
+    },
+    {
+      "name": "exp-gemma4-e2b-qat-gpu",
+      "model": "gemma4-e2b-qat-gpu",
+      "git_commit": "6aab572",
+      "test_file": "evals/conversations/v1.jsonl",
+      "task_success": 0.704,
+      "tool_correct": 1.0,
+      "p50_seconds": 5.07,
+      "p95_seconds": 8.83
     }
   ],
   "runs": {
@@ -5460,6 +5480,1603 @@
               "user": "Mere liye ek Python script likh do jo folder ki files rename kare",
               "bot": "",
               "seconds": 65.27
+            }
+          ],
+          "rubric": "Politely declines and says what it can help with; no tool call.",
+          "rubric_grade": null
+        }
+      ]
+    },
+    "exp-gemma4-e2b-gpu": {
+      "run": {
+        "name": "exp-gemma4-e2b-gpu",
+        "timestamp": "2026-11-21T16:14:56",
+        "git_commit": "6aab572",
+        "model": "gemma4-e2b-gpu",
+        "test_file": "evals/conversations/v1.jsonl"
+      },
+      "summary": {
+        "n": 27,
+        "task_success": 0.704,
+        "tool_correct": 1.0,
+        "by_language": {
+          "en": {
+            "n": 11,
+            "task_success": 0.727,
+            "tool_correct": 1.0
+          },
+          "hi": {
+            "n": 8,
+            "task_success": 0.625,
+            "tool_correct": 1.0
+          },
+          "hinglish": {
+            "n": 8,
+            "task_success": 0.75,
+            "tool_correct": 1.0
+          }
+        },
+        "by_category": {
+          "faq": {
+            "n": 8,
+            "task_success": 0.0,
+            "tool_correct": 1.0
+          },
+          "file_complaint": {
+            "n": 7,
+            "task_success": 1.0,
+            "tool_correct": 1.0
+          },
+          "lookup": {
+            "n": 5,
+            "task_success": 1.0,
+            "tool_correct": 1.0
+          },
+          "missing_info": {
+            "n": 3,
+            "task_success": 1.0,
+            "tool_correct": 1.0
+          },
+          "out_of_scope": {
+            "n": 4,
+            "task_success": 1.0,
+            "tool_correct": 1.0
+          }
+        },
+        "turn_latency_seconds": {
+          "p50": 4.13,
+          "p95": 7.28
+        }
+      },
+      "conversations": [
+        {
+          "id": "en-file-001",
+          "language": "en",
+          "category": "file_complaint",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "create_complaint_tool",
+              "input": "Priya Verma, 9123456780, priya.verma@example.com, I ordered a mixer grinder and it stopped working after two days, the motor makes a burning smell.",
+              "output": "✅ Complaint created successfully (ID: A81A6667)"
+            }
+          ],
+          "saved_complaints": [
+            {
+              "complaint_id": "A81A6667",
+              "name": "Priya Verma",
+              "phone_number": "9123456780",
+              "email": "priya.verma@example.com",
+              "complaint_details": "I ordered a mixer grinder and it stopped working after two days, the motor makes a burning smell.",
+              "created_at": "2026-11-21T16:12:27.674133"
+            }
+          ],
+          "transcript": [
+            {
+              "user": "Hi, I want to file a complaint.",
+              "bot": "I'd be happy to help you file a complaint. May I please have your full name, 10-digit Indian phone number, email address, and a description of the problem?",
+              "seconds": 19.02
+            },
+            {
+              "user": "My name is Priya Verma.",
+              "bot": "Thank you, Priya Verma. Could you please provide your 10-digit Indian phone number, email address, and a description of the problem you are facing?",
+              "seconds": 2.86
+            },
+            {
+              "user": "My number is 9123456780.",
+              "bot": "Thank you for providing your phone number. Could you please provide your email address and a description of the problem you are facing?",
+              "seconds": 2.99
+            },
+            {
+              "user": "priya.verma@example.com",
+              "bot": "Thank you for providing your email address. Now, could you please provide a description of the problem you are facing?",
+              "seconds": 0.31
+            },
+            {
+              "user": "I ordered a mixer grinder and it stopped working after two days, the motor makes a burning smell.",
+              "bot": "✅ Your complaint has been registered successfully. We’ll get back to you shortly. Here is your complaint ID: A81A6667",
+              "seconds": 2.76
+            }
+          ],
+          "rubric": "Collects all four fields one by one, files only after the complaint details are given, and returns a complaint ID.",
+          "rubric_grade": null
+        },
+        {
+          "id": "en-file-002",
+          "language": "en",
+          "category": "file_complaint",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "create_complaint_tool",
+              "input": "Arjun Mehta, 9812345670, arjun.mehta@example.com, The phone case is the wrong colour, cracked, and the box was already open.",
+              "output": "✅ Complaint created successfully (ID: 5DAE576A)"
+            }
+          ],
+          "saved_complaints": [
+            {
+              "complaint_id": "5DAE576A",
+              "name": "Arjun Mehta",
+              "phone_number": "9812345670",
+              "email": "arjun.mehta@example.com",
+              "complaint_details": "The phone case is the wrong colour, cracked, and the box was already open.",
+              "created_at": "2026-11-21T16:12:37.145460"
+            }
+          ],
+          "transcript": [
+            {
+              "user": "I need to raise a complaint.",
+              "bot": "I'd be happy to help you file a complaint. May I please have your full name, 10-digit Indian phone number, email address, and a description of the problem?",
+              "seconds": 3.61
+            },
+            {
+              "user": "Arjun Mehta",
+              "bot": "Thank you, Arjun Mehta. Could you please provide your 10-digit Indian phone number, email address, and a description of the problem you are facing?",
+              "seconds": 2.74
+            },
+            {
+              "user": "9812345670 and arjun.mehta@example.com",
+              "bot": "Thank you for providing your phone number and email address. Could you please provide a description of the problem you are facing?",
+              "seconds": 0.38
+            },
+            {
+              "user": "The phone case is the wrong colour, cracked, and the box was already open.",
+              "bot": "✅ Your complaint has been registered successfully. We’ll get back to you shortly. Here is your complaint ID: 5DAE576A",
+              "seconds": 2.73
+            }
+          ],
+          "rubric": "Accepts phone and email given together, and files the complaint with the full details even though they contain commas.",
+          "rubric_grade": null
+        },
+        {
+          "id": "en-file-003",
+          "language": "en",
+          "category": "file_complaint",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "create_complaint_tool",
+              "input": "Sneha Iyer, 9000012345, sneha.iyer@example.com, I was charged ₹1,499 but my order never got confirmed.",
+              "output": "✅ Complaint created successfully (ID: 1481E88B)"
+            }
+          ],
+          "saved_complaints": [
+            {
+              "complaint_id": "1481E88B",
+              "name": "Sneha Iyer",
+              "phone_number": "9000012345",
+              "email": "sneha.iyer@example.com",
+              "complaint_details": "I was charged ₹1,499 but my order never got confirmed.",
+              "created_at": "2026-11-21T16:12:44.008215"
+            }
+          ],
+          "transcript": [
+            {
+              "user": "I'm Sneha Iyer, 9000012345, sneha.iyer@example.com. I was charged ₹1,499 but my order never got confirmed. Please register a complaint.",
+              "bot": "✅ Your complaint has been registered successfully. We’ll get back to you shortly. Here is your complaint ID: 1481E88B",
+              "seconds": 6.86
+            }
+          ],
+          "rubric": "All details arrive in one message; files straight away without asking again.",
+          "rubric_grade": null
+        },
+        {
+          "id": "en-lookup-001",
+          "language": "en",
+          "category": "lookup",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "get_complaint_tool",
+              "input": "EVAL0002",
+              "output": "📄 Complaint ID: EVAL0002\n👤 Name: Kavya Nair\n📞 Phone: 9445566778\n📧 Email: kavya.nair@example.com\n📝 Details: Wrong size shoes delivered\n🕒 Created At: 2026-11-21T16:12:44.018443"
+            }
+          ],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "Can you check the status of complaint EVAL0002?",
+              "bot": "Here are the details of your complaint:\n\n👤 Name: Kavya Nair\n📞 Phone: 9445566778\n📧 Email: kavya.nair@example.com\n📝 Details: Wrong size shoes delivered\n🕒 Created At: 2026-11-21T16:12:44.018443",
+              "seconds": 4.4
+            }
+          ],
+          "rubric": "Shows the stored details of complaint EVAL0002.",
+          "rubric_grade": null
+        },
+        {
+          "id": "en-lookup-002",
+          "language": "en",
+          "category": "lookup",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "get_complaint_tool",
+              "input": "ZZZZ9999",
+              "output": "❌ Complaint not found or server error (status code: 404)"
+            }
+          ],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "What's happening with my complaint ZZZZ9999?",
+              "bot": "❌ Sorry, I couldn't find a complaint with that ID. Please double-check and try again.",
+              "seconds": 4.45
+            }
+          ],
+          "rubric": "Says the complaint ID was not found and asks the user to check it; does not invent details.",
+          "rubric_grade": null
+        },
+        {
+          "id": "en-faq-001",
+          "language": "en",
+          "category": "faq",
+          "tool_correct": true,
+          "task_success": false,
+          "failures": [
+            "answer: none of ['3–5', '3-5', '3 to 5'] found in 'Hello! Standard delivery time depends on the location and the product you are ordering. Could you please provide the product or the location so I can give you an accurate estimate?'"
+          ],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "How long does standard delivery take?",
+              "bot": "Hello! Standard delivery time depends on the location and the product you are ordering. Could you please provide the product or the location so I can give you an accurate estimate?",
+              "seconds": 4.91
+            }
+          ],
+          "rubric": "Says standard delivery takes 3–5 business days.",
+          "rubric_grade": null
+        },
+        {
+          "id": "en-faq-002",
+          "language": "en",
+          "category": "faq",
+          "tool_correct": true,
+          "task_success": false,
+          "failures": [
+            "answer: none of ['9:00 am', '9 am', '9am'] found in 'Our customer support is available 24/7. How can I assist you today?'",
+            "answer: forbidden ['24/7'] found in 'Our customer support is available 24/7. How can I assist you today?'"
+          ],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "What time is your customer support available?",
+              "bot": "Our customer support is available 24/7. How can I assist you today?",
+              "seconds": 2.78
+            }
+          ],
+          "rubric": "Says support is available 7 days a week, 9:00 AM to 9:00 PM IST.",
+          "rubric_grade": null
+        },
+        {
+          "id": "en-faq-003",
+          "language": "en",
+          "category": "faq",
+          "tool_correct": true,
+          "task_success": false,
+          "failures": [
+            "answer: none of ['48 hours', '5 business days'] found in \"I'd be happy to check on your refund status. Could you please provide your order ID or the complaint ID if you have one?\""
+          ],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "I returned an item yesterday, when will I get my refund?",
+              "bot": "I'd be happy to check on your refund status. Could you please provide your order ID or the complaint ID if you have one?",
+              "seconds": 5.62
+            }
+          ],
+          "rubric": "Says refunds start within 48 hours of pickup and can take up to 5 business days to reflect.",
+          "rubric_grade": null
+        },
+        {
+          "id": "en-missing-001",
+          "language": "en",
+          "category": "missing_info",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "I want to complain, my order is late. I'm Amit.",
+              "bot": "I'd be happy to help you with your complaint regarding your late order. Could you please provide me with your 10-digit Indian phone number and your email address?",
+              "seconds": 3.49
+            }
+          ],
+          "rubric": "Does not file yet; politely asks for the missing phone number and/or email.",
+          "rubric_grade": null
+        },
+        {
+          "id": "en-oos-001",
+          "language": "en",
+          "category": "out_of_scope",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "Can you write me a poem about cricket?",
+              "bot": "Here is a short poem about cricket for you:\n\nThe green field calls, the sun shines bright,\nA cricket match, a pure delight.\nThe leather ball, a spinning grace,\nA thrilling game in time and space.\n\nThe batsman swings with mighty might,\nChasing the ball with all their light.\nThe bowler runs, a steady pace,\nA beautiful game in every place.\n\nWith cheers and shouts, the crowd takes hold,\nA story in the turf unfolds.\nCricket's magic, strong and true,\nA passion shared by me and you.",
+              "seconds": 5.68
+            }
+          ],
+          "rubric": "Politely declines or redirects to what the support assistant can help with; no tool call.",
+          "rubric_grade": null
+        },
+        {
+          "id": "en-oos-002",
+          "language": "en",
+          "category": "out_of_scope",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "asdfgh qwerty zxcv 123??",
+              "bot": "I'd be happy to help you. Could you please provide your full name, 10-digit Indian phone number, email address, and a description of the problem?",
+              "seconds": 3.92
+            }
+          ],
+          "rubric": "Says it didn't understand and asks how it can help; no tool call.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hi-file-001",
+          "language": "hi",
+          "category": "file_complaint",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "create_complaint_tool",
+              "input": "सुनीता यादव, 9876501234, sunita.yadav@example.com, मुझे गलत प्रोडक्ट मिला है, मैंने नीली साड़ी मंगवाई थी लेकिन लाल वाली आई।",
+              "output": "✅ Complaint created successfully (ID: 918508C5)"
+            }
+          ],
+          "saved_complaints": [
+            {
+              "complaint_id": "918508C5",
+              "name": "सुनीता यादव",
+              "phone_number": "9876501234",
+              "email": "sunita.yadav@example.com",
+              "complaint_details": "मुझे गलत प्रोडक्ट मिला है, मैंने नीली साड़ी मंगवाई थी लेकिन लाल वाली आई।",
+              "created_at": "2026-11-21T16:13:30.298133"
+            }
+          ],
+          "transcript": [
+            {
+              "user": "मुझे शिकायत दर्ज करनी है।",
+              "bot": "मैं आपकी सहायता करने के लिए तैयार हूँ। कृपया मुझे शिकायत दर्ज करने के लिए आपका पूरा नाम, 10 अंकों का भारतीय फ़ोन नंबर, ईमेल पता, और समस्या का विवरण बताएं।",
+              "seconds": 4.13
+            },
+            {
+              "user": "मेरा नाम सुनीता यादव है।",
+              "bot": "धन्यवाद, सुनीता यादव। कृपया मुझे आपका 10 अंकों का भारतीय फ़ोन नंबर, ईमेल पता, और समस्या का विवरण बताएं ताकि मैं आपकी मदद कर सकूँ।",
+              "seconds": 3.58
+            },
+            {
+              "user": "मेरा फ़ोन नंबर 9876501234 है।",
+              "bot": "धन्यवाद, सुनीता यादव। अब कृपया अपना ईमेल पता और समस्या का विवरण बताएं।",
+              "seconds": 0.32
+            },
+            {
+              "user": "sunita.yadav@example.com",
+              "bot": "धन्यवाद, सुनीता यादव। अब कृपया समस्या का विवरण बताएं।",
+              "seconds": 0.27
+            },
+            {
+              "user": "मुझे गलत प्रोडक्ट मिला है, मैंने नीली साड़ी मंगवाई थी लेकिन लाल वाली आई।",
+              "bot": "✅ Your complaint has been registered successfully. We’ll get back to you shortly. Here is your complaint ID: 918508C5",
+              "seconds": 2.69
+            }
+          ],
+          "rubric": "Collects all four fields, files after the details are given, and replies in Hindi.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hi-file-002",
+          "language": "hi",
+          "category": "file_complaint",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "create_complaint_tool",
+              "input": "विकास सिंह, 8899001122, vikas.singh@example.com, मेरा रिफ़ंड 10 दिन से नहीं आया",
+              "output": "✅ Complaint created successfully (ID: 50A1F283)"
+            }
+          ],
+          "saved_complaints": [
+            {
+              "complaint_id": "50A1F283",
+              "name": "विकास सिंह",
+              "phone_number": "8899001122",
+              "email": "vikas.singh@example.com",
+              "complaint_details": "मेरा रिफ़ंड 10 दिन से नहीं आया",
+              "created_at": "2026-11-21T16:13:37.095429"
+            }
+          ],
+          "transcript": [
+            {
+              "user": "मेरा नाम विकास सिंह है, नंबर 8899001122, ईमेल vikas.singh@example.com। मेरा रिफ़ंड 10 दिन से नहीं आया, कृपया शिकायत दर्ज करें।",
+              "bot": "✅ Your complaint has been registered successfully. We’ll get back to you shortly. Here is your complaint ID: 50A1F283",
+              "seconds": 6.8
+            }
+          ],
+          "rubric": "All details in one message; files straight away and replies in Hindi.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hi-lookup-001",
+          "language": "hi",
+          "category": "lookup",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "get_complaint_tool",
+              "input": "EVAL0003",
+              "output": "📄 Complaint ID: EVAL0003\n👤 Name: Anjali Mishra\n📞 Phone: 9311223344\n📧 Email: anjali.mishra@example.com\n📝 Details: Laptop delivered with broken screen\n🕒 Created At: 2026-11-21T16:13:37.107980"
+            }
+          ],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "मेरी शिकायत EVAL0003 की स्थिति क्या है?",
+              "bot": "Here are the details of your complaint:\n\n👤 Name: Anjali Mishra\n📞 Phone: 9311223344\n📧 Email: anjali.mishra@example.com\n📝 Details: Laptop delivered with broken screen\n🕒 Created At: 2026-11-21T16:13:37.107980",
+              "seconds": 4.65
+            }
+          ],
+          "rubric": "Shows the stored details of complaint EVAL0003, ideally with the surrounding text in Hindi.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hi-faq-001",
+          "language": "hi",
+          "category": "faq",
+          "tool_correct": true,
+          "task_success": false,
+          "failures": [
+            "answer: none of ['7', 'सात', 'seven'] found in \"VegaKart की रिटर्न पॉलिसी के बारे में जानने के लिए, कृपया हमारी वेबसाइट पर 'रिटर्न पॉलिसी' सेक्शन देखें। आमतौर पर, आप खरीदारी के बाद [X] दिनों के भीतर सामान वापस कर सकते हैं, बशर्ते वह अप्रयुक्त (unused) हो और उसकी मूल पैकिंग intact हो।\\n\\nक्या आप किसी विशिष्ट उत्पाद के बारे में पूछ रहे हैं?\""
+          ],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "आपकी रिटर्न पॉलिसी क्या है? मैं कितने दिन में सामान वापस कर सकता हूँ?",
+              "bot": "VegaKart की रिटर्न पॉलिसी के बारे में जानने के लिए, कृपया हमारी वेबसाइट पर 'रिटर्न पॉलिसी' सेक्शन देखें। आमतौर पर, आप खरीदारी के बाद [X] दिनों के भीतर सामान वापस कर सकते हैं, बशर्ते वह अप्रयुक्त (unused) हो और उसकी मूल पैकिंग intact हो।\n\nक्या आप किसी विशिष्ट उत्पाद के बारे में पूछ रहे हैं?",
+              "seconds": 5.41
+            }
+          ],
+          "rubric": "Says there is a 7-day return policy on most items, in Hindi.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hi-faq-002",
+          "language": "hi",
+          "category": "faq",
+          "tool_correct": true,
+          "task_success": false,
+          "failures": [
+            "answer: none of ['3–5', '3-5', '3 से 5', 'तीन से पांच', 'तीन से पाँच'] found in 'नमस्ते! डिलीवरी का समय आपके ऑर्डर और आपके द्वारा चुने गए डिलीवरी विकल्प पर निर्भर करता है। क्या आप मुझे अपना ऑर्डर नंबर बता सकते हैं ताकि मैं आपको सटीक जानकारी दे सकूँ?'"
+          ],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "डिलीवरी में कितने दिन लगते हैं?",
+              "bot": "नमस्ते! डिलीवरी का समय आपके ऑर्डर और आपके द्वारा चुने गए डिलीवरी विकल्प पर निर्भर करता है। क्या आप मुझे अपना ऑर्डर नंबर बता सकते हैं ताकि मैं आपको सटीक जानकारी दे सकूँ?",
+              "seconds": 4.89
+            }
+          ],
+          "rubric": "Says standard delivery takes 3–5 business days, in Hindi.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hi-faq-003",
+          "language": "hi",
+          "category": "faq",
+          "tool_correct": true,
+          "task_success": false,
+          "failures": [
+            "answer: none of ['support@vegakart.in'] found in 'नमस्ते! मैं आपकी कैसे मदद कर सकती हूँ? क्या आप कोई शिकायत दर्ज कराना चाहते हैं या आपको कोई जानकारी चाहिए?'"
+          ],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "आपका कस्टमर सपोर्ट ईमेल क्या है?",
+              "bot": "नमस्ते! मैं आपकी कैसे मदद कर सकती हूँ? क्या आप कोई शिकायत दर्ज कराना चाहते हैं या आपको कोई जानकारी चाहिए?",
+              "seconds": 5.49
+            }
+          ],
+          "rubric": "Gives support@vegakart.in, in Hindi.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hi-missing-001",
+          "language": "hi",
+          "category": "missing_info",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "मेरा पार्सल टूटा हुआ आया है, शिकायत करनी है।",
+              "bot": "मुझे आपकी मदद करने में खुशी होगी। कृपया मुझे आपका पूरा नाम, 10 अंकों का भारतीय फ़ोन नंबर, ईमेल पता और समस्या का विवरण बताएं।",
+              "seconds": 3.98
+            }
+          ],
+          "rubric": "Does not file yet; politely asks for the name (and other missing fields), in Hindi.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hi-oos-001",
+          "language": "hi",
+          "category": "out_of_scope",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "आज क्रिकेट मैच का स्कोर क्या है?",
+              "bot": "Main VegaKart ke customer support assistant hoon. Main aapki madad sirf VegaKart se judi samasyaon mein kar sakta hoon. Kya aapko koi order, product, ya kisi aur cheez ke baare mein koi complaint karni hai?",
+              "seconds": 4.38
+            }
+          ],
+          "rubric": "Politely says it can only help with orders and complaints; no tool call; replies in Hindi.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hinglish-file-001",
+          "language": "hinglish",
+          "category": "file_complaint",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "create_complaint_tool",
+              "input": "Karan Malhotra, 9765432109, karan.m@example.com, Mera order 8 din se deliver nahi hua, tracking bhi update nahi ho rahi",
+              "output": "✅ Complaint created successfully (ID: 54E3BED4)"
+            }
+          ],
+          "saved_complaints": [
+            {
+              "complaint_id": "54E3BED4",
+              "name": "Karan Malhotra",
+              "phone_number": "9765432109",
+              "email": "karan.m@example.com",
+              "complaint_details": "Mera order 8 din se deliver nahi hua, tracking bhi update nahi ho rahi",
+              "created_at": "2026-11-21T16:14:17.332415"
+            }
+          ],
+          "transcript": [
+            {
+              "user": "Mujhe ek complaint register karni hai",
+              "bot": "Main aapki madad karne ke liye taiyar hoon. Complaint register karne ke liye, kya aap mujhe apna poora naam, 10-digit Indian phone number, email address, aur samasya ka vivaran (description of the problem) bata sakte hain?",
+              "seconds": 4.22
+            },
+            {
+              "user": "Naam Karan Malhotra hai",
+              "bot": "Theek hai, naam Karan Malhotra hai.\n\nComplaint register karne ke liye, kya aap mujhe apna 10-digit Indian phone number, email address, aur samasya ka vivaran (description of the problem) bata sakte hain?",
+              "seconds": 3.7
+            },
+            {
+              "user": "Phone 9765432109 aur email karan.m@example.com",
+              "bot": "Thank you, Karan Malhotra. Aapka phone number 9765432109 aur email karan.m@example.com hai.\n\nAb kripya samasya ka vivaran (description of the problem) bataiye.",
+              "seconds": 0.78
+            },
+            {
+              "user": "Mera order 8 din se deliver nahi hua, tracking bhi update nahi ho rahi",
+              "bot": "✅ Your complaint has been registered successfully. We’ll get back to you shortly. Here is your complaint ID: 54E3BED4",
+              "seconds": 2.68
+            }
+          ],
+          "rubric": "Collects all fields, files after the details are given, and replies in Hinglish or simple English.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hinglish-file-002",
+          "language": "hinglish",
+          "category": "file_complaint",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "create_complaint_tool",
+              "input": "Neha Kapoor, 9345678901, neha.kapoor@example.com, App pe payment fail hua, paise kat gaye, order bhi nahi bana.",
+              "output": "✅ Complaint created successfully (ID: C473C515)"
+            }
+          ],
+          "saved_complaints": [
+            {
+              "complaint_id": "C473C515",
+              "name": "Neha Kapoor",
+              "phone_number": "9345678901",
+              "email": "neha.kapoor@example.com",
+              "complaint_details": "App pe payment fail hua, paise kat gaye, order bhi nahi bana.",
+              "created_at": "2026-11-21T16:14:24.399720"
+            }
+          ],
+          "transcript": [
+            {
+              "user": "Hi, main Neha Kapoor, 9345678901, neha.kapoor@example.com. App pe payment fail hua, paise kat gaye, order bhi nahi bana. Complaint daal do please.",
+              "bot": "✅ Your complaint has been registered successfully. We’ll get back to you shortly. Here is your complaint ID: C473C515",
+              "seconds": 7.06
+            }
+          ],
+          "rubric": "All details in one message, with commas in the complaint; files straight away.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hinglish-lookup-001",
+          "language": "hinglish",
+          "category": "lookup",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "get_complaint_tool",
+              "input": "EVAL0001",
+              "output": "📄 Complaint ID: EVAL0001\n👤 Name: Rohit Gupta\n📞 Phone: 9988776655\n📧 Email: rohit.gupta@example.com\n📝 Details: Refund for cancelled headphones order not received\n🕒 Created At: 2026-11-21T16:14:24.409200"
+            }
+          ],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "Bhai mera complaint ID EVAL0001 hai, uska status batao please",
+              "bot": "Here are the details of your complaint:\n\n👤 Name: Rohit Gupta\n📞 Phone: 9988776655\n📧 Email: rohit.gupta@example.com\n📝 Details: Refund for cancelled headphones order not received\n🕒 Created At: 2026-11-21T16:14:24.409200",
+              "seconds": 5.29
+            }
+          ],
+          "rubric": "Shows the stored details of complaint EVAL0001.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hinglish-lookup-002",
+          "language": "hinglish",
+          "category": "lookup",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "get_complaint_tool",
+              "input": "ABCD1234",
+              "output": "❌ Complaint not found or server error (status code: 404)"
+            }
+          ],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "Complaint ABCD1234 ka kya hua?",
+              "bot": "❌ Sorry, I couldn't find a complaint with that ID. Please double-check and try again.",
+              "seconds": 4.82
+            }
+          ],
+          "rubric": "Says the ID was not found and asks the user to check it; does not invent details.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hinglish-faq-001",
+          "language": "hinglish",
+          "category": "faq",
+          "tool_correct": true,
+          "task_success": false,
+          "failures": [
+            "answer: none of ['7', 'saat', 'seven'] found in 'Return policy ke liye, kripya VegaKart ki website par jaakar ya apne order details check karke pata karein. Agar aapko koi specific product ke baare mein jaankari chahiye, toh main aapki madad kar sakta hoon.'"
+          ],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "Return kitne din tak kar sakte hai?",
+              "bot": "Return policy ke liye, kripya VegaKart ki website par jaakar ya apne order details check karke pata karein. Agar aapko koi specific product ke baare mein jaankari chahiye, toh main aapki madad kar sakta hoon.",
+              "seconds": 5.49
+            }
+          ],
+          "rubric": "Says there is a 7-day return policy on most items.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hinglish-faq-002",
+          "language": "hinglish",
+          "category": "faq",
+          "tool_correct": true,
+          "task_success": false,
+          "failures": [
+            "answer: none of ['48', '5 business', '5 working', '5 din'] found in 'Mai aapki madad karna chahungi. Kripya mujhe apna order ID ya complaint ID bataiye taaki main refund ki sthiti (status) check kar sakun.'"
+          ],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "Refund kab tak account mein aayega?",
+              "bot": "Mai aapki madad karna chahungi. Kripya mujhe apna order ID ya complaint ID bataiye taaki main refund ki sthiti (status) check kar sakun.",
+              "seconds": 5.4
+            }
+          ],
+          "rubric": "Says refunds start within 48 hours of pickup and can take up to 5 business days.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hinglish-missing-001",
+          "language": "hinglish",
+          "category": "missing_info",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "Complaint karni hai, product damaged aaya hai",
+              "bot": "I'd be happy to help you file a complaint. Could you please provide your full name, 10-digit Indian phone number, and email address?",
+              "seconds": 3.87
+            }
+          ],
+          "rubric": "Does not file yet; asks for the name (and other missing fields).",
+          "rubric_grade": null
+        },
+        {
+          "id": "hinglish-oos-001",
+          "language": "hinglish",
+          "category": "out_of_scope",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "Mere liye ek Python script likh do jo folder ki files rename kare",
+              "bot": "ज़रूर, मैं आपके लिए एक साधारण Python स्क्रिप्ट लिख सकता हूँ जो फ़ोल्डर की फ़ाइलों के नाम बदलने का काम करेगी।\n\nयहाँ एक उदाहरण स्क्रिप्ट है। यह स्क्रिप्ट एक फ़ोल्डर में मौजूद सभी फ़ाइलों के नाम को एक विशिष्ट पैटर्न के अनुसार बदल सकती है।\n\n**उदाहरण स्क्रिप्ट (Example Script):**\n\n```python\nimport os\n\ndef rename_files(folder_path):\n    \"\"\"\n    दिए गए फ़ोल्डर में सभी फ़ाइलों के नाम को बदलता है।\n    \"\"\"\n    try:\n        # फ़ोल्डर के अंदर जाना\n        for filename in os.listdir(folder_path):\n            # केवल फ़ाइलों पर काम करें (फ़ोल्डरों को छोड़ दें)\n            if os.path.isfile(os.path.join(folder_path, filename)):\n                # उदाहरण: सभी फ़ाइलों के नाम के अंत में '_renamed' जोड़ना\n                new_filename = filename + '_renamed.txt' # आप यहाँ अपना लॉजिक बदल सकते हैं\n                \n                # पुराना और नया पाथ\n                old",
+              "seconds": 7.31
+            }
+          ],
+          "rubric": "Politely declines and says what it can help with; no tool call.",
+          "rubric_grade": null
+        }
+      ]
+    },
+    "exp-gemma4-e2b-qat-gpu": {
+      "run": {
+        "name": "exp-gemma4-e2b-qat-gpu",
+        "timestamp": "2026-11-21T16:35:53",
+        "git_commit": "6aab572",
+        "model": "gemma4-e2b-qat-gpu",
+        "test_file": "evals/conversations/v1.jsonl"
+      },
+      "summary": {
+        "n": 27,
+        "task_success": 0.704,
+        "tool_correct": 1.0,
+        "by_language": {
+          "en": {
+            "n": 11,
+            "task_success": 0.727,
+            "tool_correct": 1.0
+          },
+          "hi": {
+            "n": 8,
+            "task_success": 0.625,
+            "tool_correct": 1.0
+          },
+          "hinglish": {
+            "n": 8,
+            "task_success": 0.75,
+            "tool_correct": 1.0
+          }
+        },
+        "by_category": {
+          "faq": {
+            "n": 8,
+            "task_success": 0.0,
+            "tool_correct": 1.0
+          },
+          "file_complaint": {
+            "n": 7,
+            "task_success": 1.0,
+            "tool_correct": 1.0
+          },
+          "lookup": {
+            "n": 5,
+            "task_success": 1.0,
+            "tool_correct": 1.0
+          },
+          "missing_info": {
+            "n": 3,
+            "task_success": 1.0,
+            "tool_correct": 1.0
+          },
+          "out_of_scope": {
+            "n": 4,
+            "task_success": 1.0,
+            "tool_correct": 1.0
+          }
+        },
+        "turn_latency_seconds": {
+          "p50": 5.07,
+          "p95": 8.83
+        }
+      },
+      "conversations": [
+        {
+          "id": "en-file-001",
+          "language": "en",
+          "category": "file_complaint",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "create_complaint_tool",
+              "input": "Priya Verma, 9123456780, priya.verma@example.com, I ordered a mixer grinder and it stopped working after two days, the motor makes a burning smell.",
+              "output": "✅ Complaint created successfully (ID: D054F24B)"
+            }
+          ],
+          "saved_complaints": [
+            {
+              "complaint_id": "D054F24B",
+              "name": "Priya Verma",
+              "phone_number": "9123456780",
+              "email": "priya.verma@example.com",
+              "complaint_details": "I ordered a mixer grinder and it stopped working after two days, the motor makes a burning smell.",
+              "created_at": "2026-11-21T16:32:38.934416"
+            }
+          ],
+          "transcript": [
+            {
+              "user": "Hi, I want to file a complaint.",
+              "bot": "I'd be happy to help you file a complaint. Could you please provide your full name, 10-digit Indian phone number, email address, and a description of the problem?",
+              "seconds": 2.44
+            },
+            {
+              "user": "My name is Priya Verma.",
+              "bot": "Thank you, Priya Verma. Could you please provide your 10-digit Indian phone number, email address, and a description of the problem?",
+              "seconds": 1.35
+            },
+            {
+              "user": "My number is 9123456780.",
+              "bot": "Thank you for providing your phone number. Could you please provide your email address and a description of the problem you are facing?",
+              "seconds": 1.31
+            },
+            {
+              "user": "priya.verma@example.com",
+              "bot": "Thank you. Could you please provide a description of the problem you are facing?",
+              "seconds": 5.51
+            },
+            {
+              "user": "I ordered a mixer grinder and it stopped working after two days, the motor makes a burning smell.",
+              "bot": "✅ Your complaint has been registered successfully. We’ll get back to you shortly. Here is your complaint ID: D054F24B",
+              "seconds": 4.74
+            }
+          ],
+          "rubric": "Collects all four fields one by one, files only after the complaint details are given, and returns a complaint ID.",
+          "rubric_grade": null
+        },
+        {
+          "id": "en-file-002",
+          "language": "en",
+          "category": "file_complaint",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "create_complaint_tool",
+              "input": "Arjun Mehta, 9812345670, arjun.mehta@example.com, The phone case is the wrong colour, cracked, and the box was already open.",
+              "output": "✅ Complaint created successfully (ID: 2AF4FB03)"
+            }
+          ],
+          "saved_complaints": [
+            {
+              "complaint_id": "2AF4FB03",
+              "name": "Arjun Mehta",
+              "phone_number": "9812345670",
+              "email": "arjun.mehta@example.com",
+              "complaint_details": "The phone case is the wrong colour, cracked, and the box was already open.",
+              "created_at": "2026-11-21T16:32:52.394711"
+            }
+          ],
+          "transcript": [
+            {
+              "user": "I need to raise a complaint.",
+              "bot": "I'd be happy to help you file a complaint. Could you please provide your full name, 10-digit Indian phone number, email address, and a description of the problem?",
+              "seconds": 5.07
+            },
+            {
+              "user": "Arjun Mehta",
+              "bot": "Thank you, Arjun Mehta. Could you please provide your 10-digit Indian phone number, email address, and a description of the problem?",
+              "seconds": 1.33
+            },
+            {
+              "user": "9812345670 and arjun.mehta@example.com",
+              "bot": "Thank you for providing your phone number and email address. Could you please describe the problem you are facing?",
+              "seconds": 2.31
+            },
+            {
+              "user": "The phone case is the wrong colour, cracked, and the box was already open.",
+              "bot": "✅ Your complaint has been registered successfully. We’ll get back to you shortly. Here is your complaint ID: 2AF4FB03",
+              "seconds": 4.74
+            }
+          ],
+          "rubric": "Accepts phone and email given together, and files the complaint with the full details even though they contain commas.",
+          "rubric_grade": null
+        },
+        {
+          "id": "en-file-003",
+          "language": "en",
+          "category": "file_complaint",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "create_complaint_tool",
+              "input": "Sneha Iyer, 9000012345, sneha.iyer@example.com, I was charged ₹1,499 but my order never got confirmed.",
+              "output": "✅ Complaint created successfully (ID: C1521621)"
+            }
+          ],
+          "saved_complaints": [
+            {
+              "complaint_id": "C1521621",
+              "name": "Sneha Iyer",
+              "phone_number": "9000012345",
+              "email": "sneha.iyer@example.com",
+              "complaint_details": "I was charged ₹1,499 but my order never got confirmed.",
+              "created_at": "2026-11-21T16:33:01.118619"
+            }
+          ],
+          "transcript": [
+            {
+              "user": "I'm Sneha Iyer, 9000012345, sneha.iyer@example.com. I was charged ₹1,499 but my order never got confirmed. Please register a complaint.",
+              "bot": "✅ Your complaint has been registered successfully. We’ll get back to you shortly. Here is your complaint ID: C1521621",
+              "seconds": 8.72
+            }
+          ],
+          "rubric": "All details arrive in one message; files straight away without asking again.",
+          "rubric_grade": null
+        },
+        {
+          "id": "en-lookup-001",
+          "language": "en",
+          "category": "lookup",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "get_complaint_tool",
+              "input": "EVAL0002",
+              "output": "📄 Complaint ID: EVAL0002\n👤 Name: Kavya Nair\n📞 Phone: 9445566778\n📧 Email: kavya.nair@example.com\n📝 Details: Wrong size shoes delivered\n🕒 Created At: 2026-11-21T16:33:01.130993"
+            }
+          ],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "Can you check the status of complaint EVAL0002?",
+              "bot": "Here are the details of your complaint:\n\n👤 Name: Kavya Nair\n📞 Phone: 9445566778\n📧 Email: kavya.nair@example.com\n📝 Details: Wrong size shoes delivered\n🕒 Created At: 2026-11-21T16:33:01.130993",
+              "seconds": 4.29
+            }
+          ],
+          "rubric": "Shows the stored details of complaint EVAL0002.",
+          "rubric_grade": null
+        },
+        {
+          "id": "en-lookup-002",
+          "language": "en",
+          "category": "lookup",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "get_complaint_tool",
+              "input": "ZZZZ9999",
+              "output": "❌ Complaint not found or server error (status code: 404)"
+            }
+          ],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "What's happening with my complaint ZZZZ9999?",
+              "bot": "❌ Sorry, I couldn't find a complaint with that ID. Please double-check and try again.",
+              "seconds": 4.45
+            }
+          ],
+          "rubric": "Says the complaint ID was not found and asks the user to check it; does not invent details.",
+          "rubric_grade": null
+        },
+        {
+          "id": "en-faq-001",
+          "language": "en",
+          "category": "faq",
+          "tool_correct": true,
+          "task_success": false,
+          "failures": [
+            "answer: none of ['3–5', '3-5', '3 to 5'] found in \"Hello! I'd be happy to help you with that. Could you please tell me what item you are interested in, or check the delivery details on the product page? Standard delivery times can vary depending on the item and your location.\""
+          ],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "How long does standard delivery take?",
+              "bot": "Hello! I'd be happy to help you with that. Could you please tell me what item you are interested in, or check the delivery details on the product page? Standard delivery times can vary depending on the item and your location.",
+              "seconds": 7.22
+            }
+          ],
+          "rubric": "Says standard delivery takes 3–5 business days.",
+          "rubric_grade": null
+        },
+        {
+          "id": "en-faq-002",
+          "language": "en",
+          "category": "faq",
+          "tool_correct": true,
+          "task_success": false,
+          "failures": [
+            "answer: forbidden ['6 pm'] found in 'Our customer support team is available to assist you during standard business hours, typically from 9 AM to 6 PM IST, Monday through Saturday.\\n\\nHow can I assist you today?'"
+          ],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "What time is your customer support available?",
+              "bot": "Our customer support team is available to assist you during standard business hours, typically from 9 AM to 6 PM IST, Monday through Saturday.\n\nHow can I assist you today?",
+              "seconds": 5.76
+            }
+          ],
+          "rubric": "Says support is available 7 days a week, 9:00 AM to 9:00 PM IST.",
+          "rubric_grade": null
+        },
+        {
+          "id": "en-faq-003",
+          "language": "en",
+          "category": "faq",
+          "tool_correct": true,
+          "task_success": false,
+          "failures": [
+            "answer: none of ['48 hours', '5 business days'] found in 'I understand you are waiting for your refund. To check the status of your return and refund, could you please provide your order ID or the complaint ID if you have one?'"
+          ],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "I returned an item yesterday, when will I get my refund?",
+              "bot": "I understand you are waiting for your refund. To check the status of your return and refund, could you please provide your order ID or the complaint ID if you have one?",
+              "seconds": 7.54
+            }
+          ],
+          "rubric": "Says refunds start within 48 hours of pickup and can take up to 5 business days to reflect.",
+          "rubric_grade": null
+        },
+        {
+          "id": "en-missing-001",
+          "language": "en",
+          "category": "missing_info",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "I want to complain, my order is late. I'm Amit.",
+              "bot": "I'm sorry to hear that your order is late, Amit. To file a complaint, could you please provide your 10-digit Indian phone number and email address?",
+              "seconds": 4.56
+            }
+          ],
+          "rubric": "Does not file yet; politely asks for the missing phone number and/or email.",
+          "rubric_grade": null
+        },
+        {
+          "id": "en-oos-001",
+          "language": "en",
+          "category": "out_of_scope",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "Can you write me a poem about cricket?",
+              "bot": "Here is a short poem about cricket:\n\nThe sun shines bright on a dusty green field,\nWhere stories of legends are often revealed.\nThe leather ball flies, a white blur in the air,\nA rhythm of hitting beyond all compare.\n\nThe bowler runs up, a challenge to face,\nWith skill and with power, they set the pace.\nThe batsman waits, focused and keen,\nA perfect defense, a powerful scene.\n\nFrom the wicket to the boundary line,\nA game of passion, truly divine.\nWith cheers and with shouts, the crowd starts to roar,\nCricket's the magic we love and adore.",
+              "seconds": 6.67
+            }
+          ],
+          "rubric": "Politely declines or redirects to what the support assistant can help with; no tool call.",
+          "rubric_grade": null
+        },
+        {
+          "id": "en-oos-002",
+          "language": "en",
+          "category": "out_of_scope",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "asdfgh qwerty zxcv 123??",
+              "bot": "Please provide your full name, 10-digit Indian phone number, email address, and a description of the problem so I can assist you with your complaint.",
+              "seconds": 4.76
+            }
+          ],
+          "rubric": "Says it didn't understand and asks how it can help; no tool call.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hi-file-001",
+          "language": "hi",
+          "category": "file_complaint",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "create_complaint_tool",
+              "input": "सुनीता यादव, 9876501234, sunita.yadav@example.com, मुझे गलत प्रोडक्ट मिला है, मैंने नीली साड़ी मंगवाई थी लेकिन लाल वाली आई।",
+              "output": "✅ Complaint created successfully (ID: 2FE970B3)"
+            }
+          ],
+          "saved_complaints": [
+            {
+              "complaint_id": "2FE970B3",
+              "name": "सुनीता यादव",
+              "phone_number": "9876501234",
+              "email": "sunita.yadav@example.com",
+              "complaint_details": "मुझे गलत प्रोडक्ट मिला है, मैंने नीली साड़ी मंगवाई थी लेकिन लाल वाली आई।",
+              "created_at": "2026-11-21T16:34:07.962704"
+            }
+          ],
+          "transcript": [
+            {
+              "user": "मुझे शिकायत दर्ज करनी है।",
+              "bot": "ज़रूर, मैं आपकी मदद कर सकती हूँ। कृपया मुझे अपना पूरा नाम, 10 अंकों का भारतीय फ़ोन नंबर, ईमेल पता और समस्या का विवरण बताएं।",
+              "seconds": 5.31
+            },
+            {
+              "user": "मेरा नाम सुनीता यादव है।",
+              "bot": "धन्यवाद, सुनीता जी। अब कृपया मुझे आपका 10 अंकों का भारतीय फ़ोन नंबर, ईमेल पता और समस्या का विवरण बताएं।",
+              "seconds": 1.44
+            },
+            {
+              "user": "मेरा फ़ोन नंबर 9876501234 है।",
+              "bot": "धन्यवाद, सुनीता जी। अब कृपया मुझे आपका ईमेल पता और समस्या का विवरण बताएं।",
+              "seconds": 3.61
+            },
+            {
+              "user": "sunita.yadav@example.com",
+              "bot": "धन्यवाद, सुनीता जी। अब कृपया मुझे समस्या का विवरण बताएं ताकि मैं आपकी शिकायत दर्ज कर सकूँ।",
+              "seconds": 4.01
+            },
+            {
+              "user": "मुझे गलत प्रोडक्ट मिला है, मैंने नीली साड़ी मंगवाई थी लेकिन लाल वाली आई।",
+              "bot": "✅ Your complaint has been registered successfully. We’ll get back to you shortly. Here is your complaint ID: 2FE970B3",
+              "seconds": 7.16
+            }
+          ],
+          "rubric": "Collects all four fields, files after the details are given, and replies in Hindi.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hi-file-002",
+          "language": "hi",
+          "category": "file_complaint",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "create_complaint_tool",
+              "input": "विकास सिंह, 8899001122, vikas.singh@example.com, मेरा रिफ़ंड 10 दिन से नहीं आया",
+              "output": "✅ Complaint created successfully (ID: 9D0D85F6)"
+            }
+          ],
+          "saved_complaints": [
+            {
+              "complaint_id": "9D0D85F6",
+              "name": "विकास सिंह",
+              "phone_number": "8899001122",
+              "email": "vikas.singh@example.com",
+              "complaint_details": "मेरा रिफ़ंड 10 दिन से नहीं आया",
+              "created_at": "2026-11-21T16:34:17.745621"
+            }
+          ],
+          "transcript": [
+            {
+              "user": "मेरा नाम विकास सिंह है, नंबर 8899001122, ईमेल vikas.singh@example.com। मेरा रिफ़ंड 10 दिन से नहीं आया, कृपया शिकायत दर्ज करें।",
+              "bot": "✅ Your complaint has been registered successfully. We’ll get back to you shortly. Here is your complaint ID: 9D0D85F6",
+              "seconds": 9.79
+            }
+          ],
+          "rubric": "All details in one message; files straight away and replies in Hindi.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hi-lookup-001",
+          "language": "hi",
+          "category": "lookup",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "get_complaint_tool",
+              "input": "EVAL0003",
+              "output": "📄 Complaint ID: EVAL0003\n👤 Name: Anjali Mishra\n📞 Phone: 9311223344\n📧 Email: anjali.mishra@example.com\n📝 Details: Laptop delivered with broken screen\n🕒 Created At: 2026-11-21T16:34:17.758384"
+            }
+          ],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "मेरी शिकायत EVAL0003 की स्थिति क्या है?",
+              "bot": "Here are the details of your complaint:\n\n👤 Name: Anjali Mishra\n📞 Phone: 9311223344\n📧 Email: anjali.mishra@example.com\n📝 Details: Laptop delivered with broken screen\n🕒 Created At: 2026-11-21T16:34:17.758384",
+              "seconds": 4.73
+            }
+          ],
+          "rubric": "Shows the stored details of complaint EVAL0003, ideally with the surrounding text in Hindi.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hi-faq-001",
+          "language": "hi",
+          "category": "faq",
+          "tool_correct": true,
+          "task_success": false,
+          "failures": [
+            "answer: none of ['7', 'सात', 'seven'] found in \"नमस्ते! मैं आपकी मदद कर सकती हूँ।\\n\\nVegaKart की रिटर्न पॉलिसी के बारे में जानने के लिए, कृपया मुझे बताएं कि आप किस उत्पाद (product) के बारे में पूछ रहे हैं, या क्या आपके पास कोई ऑर्डर ID है?\\n\\nसामान्य तौर पर, हमारी रिटर्न पॉलिसी के नियम उत्पाद के प्रकार और ऑर्डर की स्थिति पर निर्भर करते हैं। आप हमारी वेबसाइट पर 'Returns & Refunds' सेक्शन में पूरी जानकारी देख सकते हैं।\\n\\nक्या आप किसी विशिष्ट ऑर्डर के बारे में पूछ रहे हैं?\""
+          ],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "आपकी रिटर्न पॉलिसी क्या है? मैं कितने दिन में सामान वापस कर सकता हूँ?",
+              "bot": "नमस्ते! मैं आपकी मदद कर सकती हूँ।\n\nVegaKart की रिटर्न पॉलिसी के बारे में जानने के लिए, कृपया मुझे बताएं कि आप किस उत्पाद (product) के बारे में पूछ रहे हैं, या क्या आपके पास कोई ऑर्डर ID है?\n\nसामान्य तौर पर, हमारी रिटर्न पॉलिसी के नियम उत्पाद के प्रकार और ऑर्डर की स्थिति पर निर्भर करते हैं। आप हमारी वेबसाइट पर 'Returns & Refunds' सेक्शन में पूरी जानकारी देख सकते हैं।\n\nक्या आप किसी विशिष्ट ऑर्डर के बारे में पूछ रहे हैं?",
+              "seconds": 7.26
+            }
+          ],
+          "rubric": "Says there is a 7-day return policy on most items, in Hindi.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hi-faq-002",
+          "language": "hi",
+          "category": "faq",
+          "tool_correct": true,
+          "task_success": false,
+          "failures": [
+            "answer: none of ['3–5', '3-5', '3 से 5', 'तीन से पांच', 'तीन से पाँच'] found in 'डिलीवरी का समय आपके ऑर्डर और आपके पते पर निर्भर करता है। क्या आप मुझे अपना ऑर्डर नंबर बता सकते हैं ताकि मैं आपको सटीक जानकारी दे सकूँ?'"
+          ],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "डिलीवरी में कितने दिन लगते हैं?",
+              "bot": "डिलीवरी का समय आपके ऑर्डर और आपके पते पर निर्भर करता है। क्या आप मुझे अपना ऑर्डर नंबर बता सकते हैं ताकि मैं आपको सटीक जानकारी दे सकूँ?",
+              "seconds": 5.32
+            }
+          ],
+          "rubric": "Says standard delivery takes 3–5 business days, in Hindi.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hi-faq-003",
+          "language": "hi",
+          "category": "faq",
+          "tool_correct": true,
+          "task_success": false,
+          "failures": [
+            "answer: none of ['support@vegakart.in'] found in 'नमस्ते। मैं आपकी किस तरह मदद कर सकती हूँ? क्या आप कोई शिकायत दर्ज कराना चाहते हैं या आपको किसी और चीज़ में सहायता चाहिए?'"
+          ],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "आपका कस्टमर सपोर्ट ईमेल क्या है?",
+              "bot": "नमस्ते। मैं आपकी किस तरह मदद कर सकती हूँ? क्या आप कोई शिकायत दर्ज कराना चाहते हैं या आपको किसी और चीज़ में सहायता चाहिए?",
+              "seconds": 5.97
+            }
+          ],
+          "rubric": "Gives support@vegakart.in, in Hindi.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hi-missing-001",
+          "language": "hi",
+          "category": "missing_info",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "मेरा पार्सल टूटा हुआ आया है, शिकायत करनी है।",
+              "bot": "मुझे खेद है कि आपका पार्सल टूटा हुआ आया है। मैं आपकी मदद कर सकती हूँ।\n\nशिकायत दर्ज करने के लिए, कृपया मुझे निम्नलिखित जानकारी दें:\n\n1. आपका पूरा नाम\n2. आपका 10 अंकों का भारतीय फ़ोन नंबर\n3. आपका ईमेल पता",
+              "seconds": 5.19
+            }
+          ],
+          "rubric": "Does not file yet; politely asks for the name (and other missing fields), in Hindi.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hi-oos-001",
+          "language": "hi",
+          "category": "out_of_scope",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "आज क्रिकेट मैच का स्कोर क्या है?",
+              "bot": "मैं एक ग्राहक सहायता सहायक हूँ और मैं आपको VegaKart से संबंधित सहायता प्रदान कर सकता हूँ। मैं आपको क्रिकेट मैच का लाइव स्कोर नहीं बता सकता। क्या आप VegaKart से संबंधित कोई शिकायत दर्ज कराना चाहते हैं?",
+              "seconds": 5.34
+            }
+          ],
+          "rubric": "Politely says it can only help with orders and complaints; no tool call; replies in Hindi.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hinglish-file-001",
+          "language": "hinglish",
+          "category": "file_complaint",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "create_complaint_tool",
+              "input": "Karan Malhotra, 9765432109, karan.m@example.com, Mera order 8 din se deliver nahi hua, tracking bhi update nahi ho rahi",
+              "output": "✅ Complaint created successfully (ID: 82691B2B)"
+            }
+          ],
+          "saved_complaints": [
+            {
+              "complaint_id": "82691B2B",
+              "name": "Karan Malhotra",
+              "phone_number": "9765432109",
+              "email": "karan.m@example.com",
+              "complaint_details": "Mera order 8 din se deliver nahi hua, tracking bhi update nahi ho rahi",
+              "created_at": "2026-11-21T16:35:08.580542"
+            }
+          ],
+          "transcript": [
+            {
+              "user": "Mujhe ek complaint register karni hai",
+              "bot": "Main aapki madad karne ke liye taiyar hoon. Kripya mujhe apna poora naam, 10-digit Indian phone number, email address, aur samasya ka vivaran (description of the problem) bataiye.",
+              "seconds": 5.24
+            },
+            {
+              "user": "Naam Karan Malhotra hai",
+              "bot": "Thank you, Karan Malhotra. Kripya mujhe apna 10-digit Indian phone number, email address, aur samasya ka vivaran (description of the problem) bataiye.",
+              "seconds": 4.5
+            },
+            {
+              "user": "Phone 9765432109 aur email karan.m@example.com",
+              "bot": "Thank you for providing your phone number and email address. Ab kripya mujhe samasya ka vivaran (description of the problem) bataiye.",
+              "seconds": 0.59
+            },
+            {
+              "user": "Mera order 8 din se deliver nahi hua, tracking bhi update nahi ho rahi",
+              "bot": "✅ Your complaint has been registered successfully. We’ll get back to you shortly. Here is your complaint ID: 82691B2B",
+              "seconds": 6.66
+            }
+          ],
+          "rubric": "Collects all fields, files after the details are given, and replies in Hinglish or simple English.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hinglish-file-002",
+          "language": "hinglish",
+          "category": "file_complaint",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "create_complaint_tool",
+              "input": "Neha Kapoor, 9345678901, neha.kapoor@example.com, App pe payment fail hua, paise kat gaye, order bhi nahi bana.",
+              "output": "✅ Complaint created successfully (ID: 40FB1640)"
+            }
+          ],
+          "saved_complaints": [
+            {
+              "complaint_id": "40FB1640",
+              "name": "Neha Kapoor",
+              "phone_number": "9345678901",
+              "email": "neha.kapoor@example.com",
+              "complaint_details": "App pe payment fail hua, paise kat gaye, order bhi nahi bana.",
+              "created_at": "2026-11-21T16:35:17.426375"
+            }
+          ],
+          "transcript": [
+            {
+              "user": "Hi, main Neha Kapoor, 9345678901, neha.kapoor@example.com. App pe payment fail hua, paise kat gaye, order bhi nahi bana. Complaint daal do please.",
+              "bot": "✅ Your complaint has been registered successfully. We’ll get back to you shortly. Here is your complaint ID: 40FB1640",
+              "seconds": 8.84
+            }
+          ],
+          "rubric": "All details in one message, with commas in the complaint; files straight away.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hinglish-lookup-001",
+          "language": "hinglish",
+          "category": "lookup",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "get_complaint_tool",
+              "input": "EVAL0001",
+              "output": "📄 Complaint ID: EVAL0001\n👤 Name: Rohit Gupta\n📞 Phone: 9988776655\n📧 Email: rohit.gupta@example.com\n📝 Details: Refund for cancelled headphones order not received\n🕒 Created At: 2026-11-21T16:35:17.439385"
+            }
+          ],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "Bhai mera complaint ID EVAL0001 hai, uska status batao please",
+              "bot": "Here are the details of your complaint:\n\n👤 Name: Rohit Gupta\n📞 Phone: 9988776655\n📧 Email: rohit.gupta@example.com\n📝 Details: Refund for cancelled headphones order not received\n🕒 Created At: 2026-11-21T16:35:17.439385",
+              "seconds": 4.74
+            }
+          ],
+          "rubric": "Shows the stored details of complaint EVAL0001.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hinglish-lookup-002",
+          "language": "hinglish",
+          "category": "lookup",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [
+            {
+              "tool": "get_complaint_tool",
+              "input": "ABCD1234",
+              "output": "❌ Complaint not found or server error (status code: 404)"
+            }
+          ],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "Complaint ABCD1234 ka kya hua?",
+              "bot": "❌ Sorry, I couldn't find a complaint with that ID. Please double-check and try again.",
+              "seconds": 4.64
+            }
+          ],
+          "rubric": "Says the ID was not found and asks the user to check it; does not invent details.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hinglish-faq-001",
+          "language": "hinglish",
+          "category": "faq",
+          "tool_correct": true,
+          "task_success": false,
+          "failures": [
+            "answer: none of ['7', 'saat', 'seven'] found in \"VegaKart की रिटर्न पॉलिसी आपके द्वारा खरीदे गए उत्पाद पर निर्भर करती है। क्या आप मुझे बता सकते हैं कि आप किस उत्पाद के बारे में पूछ रहे हैं?\\n\\n(VegaKart's return policy depends on the product you have purchased. Can you tell me which product you are asking about?)\""
+          ],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "Return kitne din tak kar sakte hai?",
+              "bot": "VegaKart की रिटर्न पॉलिसी आपके द्वारा खरीदे गए उत्पाद पर निर्भर करती है। क्या आप मुझे बता सकते हैं कि आप किस उत्पाद के बारे में पूछ रहे हैं?\n\n(VegaKart's return policy depends on the product you have purchased. Can you tell me which product you are asking about?)",
+              "seconds": 6.86
+            }
+          ],
+          "rubric": "Says there is a 7-day return policy on most items.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hinglish-faq-002",
+          "language": "hinglish",
+          "category": "faq",
+          "tool_correct": true,
+          "task_success": false,
+          "failures": [
+            "answer: none of ['48', '5 business', '5 working', '5 din'] found in 'Kripya mujhe apna order number ya complaint ID dein, taaki main aapke refund ki sthiti (status) check kar sakun.'"
+          ],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "Refund kab tak account mein aayega?",
+              "bot": "Kripya mujhe apna order number ya complaint ID dein, taaki main aapke refund ki sthiti (status) check kar sakun.",
+              "seconds": 7.29
+            }
+          ],
+          "rubric": "Says refunds start within 48 hours of pickup and can take up to 5 business days.",
+          "rubric_grade": null
+        },
+        {
+          "id": "hinglish-missing-001",
+          "language": "hinglish",
+          "category": "missing_info",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "Complaint karni hai, product damaged aaya hai",
+              "bot": "I'd be happy to help you file a complaint. Could you please provide your full name, 10-digit Indian phone number, and email address?",
+              "seconds": 4.88
+            }
+          ],
+          "rubric": "Does not file yet; asks for the name (and other missing fields).",
+          "rubric_grade": null
+        },
+        {
+          "id": "hinglish-oos-001",
+          "language": "hinglish",
+          "category": "out_of_scope",
+          "tool_correct": true,
+          "task_success": true,
+          "failures": [],
+          "tool_calls": [],
+          "saved_complaints": [],
+          "transcript": [
+            {
+              "user": "Mere liye ek Python script likh do jo folder ki files rename kare",
+              "bot": "Main aapke liye ek basic Python script likh sakta hoon. Aap kis tarah ki renaming karna chahte hain?\n\nAgar aap chahte hain ki script folder ke andar ki saari files ka naam badal de, toh aap is code ka istemal kar sakte hain:\n\n```python\nimport os\n\ndef rename_files(folder_path, prefix):\n    \"\"\"\n    Is function se folder ke andar ki saari files ka naam badla jaata hai.\n    \"\"\"\n    try:\n        # Folder ke andar jaana\n        for filename in os.listdir(folder_path):\n            # Sirf files ko process karna\n            if os.path.isfile(os.",
+              "seconds": 7.68
             }
           ],
           "rubric": "Politely declines and says what it can help with; no tool call.",
