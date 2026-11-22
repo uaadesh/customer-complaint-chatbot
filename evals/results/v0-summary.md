@@ -8,7 +8,7 @@ How well does the original complaint chatbot work, and which free local model sh
 |---|---|
 | Laptop | NVIDIA GTX 1650 Ti (4 GB VRAM), AMD Ryzen 5 4600H (6 cores), 8 GB RAM, Windows 11 |
 | Model server | Ollama (0.17.7 for the v0 baseline, 0.40.17 for the benchmark) |
-| Test set | 27 conversations: 11 English, 8 Hindi, 8 Hinglish, covering filing a complaint, looking one up, FAQ questions, missing information and off-topic requests |
+| Test set | 27 conversations: 11 English, 8 Hindi, 8 Hinglish, covering filing a complaint, looking one up, FAQ questions, missing information and off-topic requests. These are now the start of [`test_set.jsonl`](../conversations/test_set.jsonl), which will grow to 150–200 conversations. |
 | Scoring | **Task success**: the right tool was called, the saved complaint is correct, and the reply contains the right facts. **Tool correct**: the right tool was called with the right arguments. |
 
 Full results for every conversation: [v0-benchmark.json](v0-benchmark.json).
@@ -64,7 +64,7 @@ All models support Hindi. Models without official Hindi support were excluded.
 
 - **27 conversations is a small sample.** A difference of less than about 20 points can be chance, so the finalists are not separated yet.
 - **FAQ answers are not compared.** Every model scored 0–25% because the FAQ isn't connected yet, so they guess. This will be fixed in the next phase.
-- **The test sets differ slightly.** The v0 baseline used the original test set, and v0.1 used a copy with two stricter FAQ checks.
+- **The test sets differ slightly.** The v0 baseline used the original test set, and v0.1 used a copy with two stricter FAQ checks. Both files are kept in git history at commit `b883481`, under `evals/conversations/`.
 - **The exact wording depends on the setup.** Temperature 0 gives the same reply every run on the same setup, but moving layers between CPU and GPU changed the wording of 22 of 27 conversations. The pass/fail outcomes stayed the same.
 
 ## Hand grading of the finalists

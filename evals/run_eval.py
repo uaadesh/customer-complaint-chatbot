@@ -220,7 +220,7 @@ def merge_files(files: list[str], out_path: Path) -> None:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--name", help="run name, e.g. v0-baseline (required unless --merge)")
-    parser.add_argument("--tests", default="evals/conversations/baseline.jsonl")
+    parser.add_argument("--tests", default="evals/conversations/test_set.jsonl")
     parser.add_argument("--only", help="comma-separated conversation ids to run")
     parser.add_argument("--model", help="Ollama model to use instead of the bot's default, e.g. qwen3:4b-instruct")
     parser.add_argument("--out", default="evals/results/v0-benchmark.json",
