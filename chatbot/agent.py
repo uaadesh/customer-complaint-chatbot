@@ -14,15 +14,21 @@ from chatbot.rag_retriever import build_retriever
 from chatbot.tools import create_complaint_tool, get_complaint_tool
 
 
-def get_local_llm(model_name="llama3.2:3b"):
+def get_local_llm(model_name="gemma4:e2b"):
     """
     Returns a locally running Ollama-compatible LLM client.
+
+    gemma4:e2b was chosen in the v0 model benchmark (see evals/results/v0-summary.md).
     """
     return ChatOllama(
         model=model_name,
         base_url="http://127.0.0.1:11434",
         temperature=0,    # deterministic: the same question gets the same answer every run
         num_predict=512,  # cap reply length so a model stuck in a loop can't run for minutes
+        # Put all model layers on the GPU. By default Ollama keeps some on the CPU
+        # because it reserves GPU memory for gemma's image/audio parts, which this
+        # text-only bot never uses. All on GPU = ~30% faster replies on a 4 GB GPU.
+        num_gpu=99,
     )
 
 
