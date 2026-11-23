@@ -1,62 +1,53 @@
 # chatbot/tools.py
+"""
+Tools the agent can call. They use native tool calling: LangChain turns each function's
+name, typed arguments and docstring into a tool schema the model sees, and the model
+returns a structured call with named arguments (not JSON inside its text).
 
-from langchain.tools import tool
+The docstrings are written for the model: they are its only description of each tool.
+"""
+
+from langchain_core.tools import tool
 import requests
 
 API_BASE = "http://localhost:8000"
 
+
 @tool
-def create_complaint_tool(data: str) -> str:
-    """
-    Tool: Create a new complaint.
-    
-    Input (str): A comma-separated string of 4 values:
-        "name, phone_number, email, complaint_details"
-    Only the first 3 commas separate fields, so the complaint details
-    may themselves contain commas.
+def create_complaint_tool(name: str, phone_number: str, email: str, complaint_details: str) -> str:
+    """File a new customer complaint. Call this only when the customer has given all four
+    values themselves; never guess or invent any of them.
 
-    Example:
-        "Deepak, 9876543210, deepak@example.com, Order late, box damaged"
-
-    Returns:
-        str: Success or error message
+    Args:
+        name: The customer's full name.
+        phone_number: The customer's 10-digit Indian mobile number, digits only.
+        email: The customer's email address.
+        complaint_details: A description of the problem, in the customer's own words.
     """
+    payload = {
+        "name": name.strip(),
+        "phone_number": phone_number.strip(),
+        "email": email.strip(),
+        "complaint_details": complaint_details.strip(),
+    }
     try:
-        # maxsplit=3: name, phone and email never contain commas, so everything
-        # after the third comma is the complaint text, commas included.
-        parts = [x.strip() for x in data.split(",", 3)]
-        if len(parts) != 4:
-            return "Error: Please provide exactly 4 comma-separated fields: name, phone, email, details."
-
-        payload = {
-            "name": parts[0],
-            "phone_number": parts[1],
-            "email": parts[2],
-            "complaint_details": parts[3],
-        }
-
         res = requests.post(f"{API_BASE}/complaints", json=payload)
         if res.status_code == 200:
             return f"✅ {res.json().get('message')} (ID: {res.json().get('complaint_id')})"
-        else:
-            return f"❌ API error {res.status_code}: {res.text}"
+        return f"❌ API error {res.status_code}: {res.text}"
     except Exception as e:
         return f"❌ Exception in complaint creation: {str(e)}"
 
 
 @tool
 def get_complaint_tool(complaint_id: str) -> str:
-    """
-    Tool: Retrieve complaint details by ID.
-    
-    Input:
-        complaint_id (str): The unique complaint ID.
-    
-    Returns:
-        str: Formatted complaint details or error message.
+    """Look up an existing complaint by its complaint ID and return its details.
+
+    Args:
+        complaint_id: The complaint ID the customer gave, e.g. "1DCE63BD".
     """
     try:
-        res = requests.get(f"{API_BASE}/complaints/{complaint_id}")
+        res = requests.get(f"{API_BASE}/complaints/{complaint_id.strip()}")
         if res.status_code != 200:
             return f"❌ Complaint not found or server error (status code: {res.status_code})"
 

@@ -41,9 +41,9 @@ jsonschema==4.24.0
 jsonschema-specifications==2025.4.1
 langchain==0.3.25
 langchain-community==0.3.25
-langchain-core==0.3.65
+langchain-core==0.3.86
 langchain-huggingface==0.3.0
-langchain-ollama==0.3.3
+langchain-ollama==0.3.10
 langchain-text-splitters==0.3.8
 langgraph==0.4.8
 langgraph-checkpoint==2.1.0
@@ -58,7 +58,7 @@ mypy_extensions==1.1.0
 narwhals==1.42.1
 networkx==3.5
 numpy==2.3.0
-ollama==0.5.1
+ollama==0.6.3
 openai==1.86.0
 orjson==3.10.18
 ormsgpack==1.10.0
@@ -107,6 +107,7 @@ typing-inspection==0.4.1
 typing_extensions==4.14.0
 tzdata==2025.2
 urllib3==2.4.0
+uuid_utils==0.19.0
 uvicorn==0.34.3
 watchdog==6.0.0
 Werkzeug==3.1.3

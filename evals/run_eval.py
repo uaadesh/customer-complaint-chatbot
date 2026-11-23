@@ -41,6 +41,8 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
+from chatbot.config import LLM_THINKING  # noqa: E402  (recorded with each run)
+
 # The backend opens "complaints.db" relative to where uvicorn was started,
 # so it must be started from the repo root for this path to be the same file.
 DB_PATH = REPO_ROOT / "complaints.db"
@@ -97,18 +99,22 @@ def new_complaints(seeded_ids: set[str]) -> list[dict]:
 TOOL_CALLS: list[dict] = []
 
 
-def recording(name, real_tool):
-    def wrapper(tool_input):
-        result = real_tool(tool_input)  # same call the agent would make
-        TOOL_CALLS.append({"tool": name, "input": tool_input, "output": result})
+def record_calls(lc_tool):
+    """Wrap a LangChain tool's function so every call is logged. The tool's schema
+    (what the model sees) is unchanged, and the real function still runs."""
+    real = lc_tool.func
+
+    def wrapper(**kwargs):
+        result = real(**kwargs)
+        TOOL_CALLS.append({"tool": lc_tool.name, "input": kwargs, "output": result})
         return result
-    return wrapper
+    lc_tool.func = wrapper
 
 
 def build_recorded_agent(model: str | None):
     import chatbot.agent as agent_module
-    for name in ("create_complaint_tool", "get_complaint_tool"):
-        setattr(agent_module, name, recording(name, getattr(agent_module, name)))
+    for lc_tool in (agent_module.create_complaint_tool, agent_module.get_complaint_tool):
+        record_calls(lc_tool)
 
     # build_agent() calls get_local_llm() with no arguments, so it always gets
     # the default model. To benchmark another model without editing the bot,
@@ -138,7 +144,9 @@ def score(conv: dict, calls: list[dict], saved: list[dict], final_reply: str) ->
         # Check the arguments of the last call to the expected tool.
         last_input = [c["input"] for c in calls if c["tool"] == want][-1]
         for arg, rule in expected.get("tool_args", {}).items():
-            tool_failures += [f"tool arg {arg}: {m}" for m in check_value(str(last_input), rule)]
+            # Native tool calls have named arguments; older runs had one input string.
+            value = last_input.get(arg) if isinstance(last_input, dict) else last_input
+            tool_failures += [f"tool arg {arg}: {m}" for m in check_value(str(value or ""), rule)]
 
     if "saved_complaint" in expected:
         if not saved:
@@ -216,7 +224,7 @@ def merge_files(files: list[str], out_path: Path) -> None:
         combined["runs"][run["run"]["name"]] = run
         print(f"merged {run['run']['name']}")
     save_combined(out_path, combined)
-    print(f"{len(combined['runs'])} runs in {out_path.relative_to(REPO_ROOT)}")
+    print(f"{len(combined['runs'])} runs in {out_path}")
 
 
 def main():
@@ -300,6 +308,7 @@ def main():
             "timestamp": datetime.now().isoformat(timespec="seconds"),
             "git_commit": commit,
             "model": model,
+            "thinking": LLM_THINKING,
             "test_file": args.tests,
         },
         "summary": summary,
@@ -313,7 +322,7 @@ def main():
 
     print(f"\nTask success: {summary['task_success']:.0%}   Tool correct: {summary['tool_correct']:.0%}   "
           f"p50/p95 turn: {summary['turn_latency_seconds']['p50']}s / {summary['turn_latency_seconds']['p95']}s")
-    print(f"Saved as run '{args.name}' in {out_path.relative_to(REPO_ROOT)}")
+    print(f"Saved as run '{args.name}' in {out_path}")
 
 
 def _group(items, key):

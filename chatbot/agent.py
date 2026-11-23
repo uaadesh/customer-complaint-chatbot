@@ -1,15 +1,15 @@
 # chatbot/agent.py
 
-import json
 import re
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, BaseMessage
 from langgraph.graph import StateGraph, END
 from langchain.memory import ConversationBufferMemory
 from langchain_ollama import ChatOllama
-from langchain_community.llms import OpenAI
 
-from chatbot.config import use_openai, OPENAI_API_KEY
+from chatbot.config import use_openai, LLM_THINKING
 from chatbot.tools import create_complaint_tool, get_complaint_tool
+
+FALLBACK_REPLY = "Sorry, I didn't quite get that. Could you please rephrase?"
 
 
 def get_local_llm(model_name="gemma4:e2b"):
@@ -27,42 +27,35 @@ def get_local_llm(model_name="gemma4:e2b"):
         # because it reserves GPU memory for gemma's image/audio parts, which this
         # text-only bot never uses. All on GPU = ~30% faster replies on a 4 GB GPU.
         num_gpu=99,
+        # gemma4 "thinks" (writes hidden reasoning) before every reply unless told not
+        # to. Thinking text is kept out of the reply either way; see LLM_THINKING in config.
+        reasoning=LLM_THINKING,
     )
 
 
 def build_agent():
     """
     Builds the LangGraph-powered agent with:
-    - Tool usage for complaint creation and retrieval
+    - Native tool calling for complaint creation and lookup
     - Structured memory
-    - JSON-based tool invocation
     """
-    # System instruction prompt
+    # System instruction prompt. The tools' names, arguments and descriptions are sent
+    # to the model separately, as tool schemas (see chatbot/tools.py).
     system_prompt = """
         You are a helpful and professional customer support assistant for VegaKart, an Indian online store. Your job is to:
 
-        1. File complaints. You need all four of these from the customer:
+        1. File complaints with create_complaint_tool. You need all four of these from the customer:
         - full name
         - 10-digit Indian phone number
         - email address
         - a description of the problem
 
         Ask politely for whatever is missing. Use only what the customer has actually told you: never invent values, and never reuse anything from these instructions.
-        Only when you have all four, including the description of the problem, output this JSON to call the complaint creation tool, replacing each <...> with the customer's own words:
-        {
-        "action": "create_complaint_tool",
-        "input": "<name>, <phone>, <email>, <description of the problem>"
-        }
+        Only call the tool when you have all four, including the description of the problem.
 
-        2. Retrieve complaint details if the customer gives a complaint ID, using this JSON format:
-        {
-        "action": "get_complaint_tool",
-        "input": "<complaint ID>"
-        }
+        2. Retrieve complaint details with get_complaint_tool if the customer gives a complaint ID.
 
         3. If no tool is needed, simply respond directly based on the knowledge base.
-
-        When you output JSON, output only the JSON: no explanation and no code fences.
 
         Always reply in the same language and script the customer uses: English, Hindi (Devanagari) or Hinglish (Hindi in Roman script).
 
@@ -71,15 +64,14 @@ def build_agent():
         You: I'd be happy to help. May I know your full name?
     """
 
-    # Choose LLM backend
-    llm = OpenAI(temperature=0, openai_api_key=OPENAI_API_KEY) if use_openai else get_local_llm()
+    if use_openai:
+        # The old OpenAI completion LLM can't do native tool calling. A chat model
+        # with tool support (e.g. a free-tier API) can be added here later.
+        raise NotImplementedError("use_openai is not supported since the switch to native tool calling")
 
-    # Tool registry. Policy retrieval (chatbot/rag_retriever.py) is not connected yet:
-    # the old "GeneralQA" tool was never called by the prompt and was removed in Phase 2.
-    tools = {
-        "create_complaint_tool": create_complaint_tool,
-        "get_complaint_tool": get_complaint_tool,
-    }
+    # Tool registry: name -> LangChain tool. bind_tools sends their schemas to the model.
+    tools = {t.name: t for t in (create_complaint_tool, get_complaint_tool)}
+    llm = get_local_llm().bind_tools(list(tools.values()))
 
     # Memory for conversation history
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
@@ -99,15 +91,16 @@ def build_agent():
         messages.append(HumanMessage(content=user_input))
 
         response = llm.invoke(messages)
-        # Thinking models (e.g. qwen3.5) may put their reasoning in <think>...</think>
-        # before the answer. Drop it, including an unclosed <think> cut off by the
-        # length cap, so only the actual answer is parsed and shown.
+        # Safety net for models that put reasoning inside the reply as <think>...</think>
+        # (including an unclosed <think> cut off by the length cap). Ollama normally
+        # returns thinking separately, so this rarely does anything.
         llm_output = re.sub(r"<think>.*?(</think>|$)", "", response.content, flags=re.DOTALL).strip()
 
         return {
             "state": {
                 **state,
-                "llm_output": llm_output
+                "llm_output": llm_output,
+                "tool_calls": response.tool_calls,  # structured calls: [{"name", "args", "id"}]
             }
         }
 
@@ -115,52 +108,40 @@ def build_agent():
     def tool_step(input: dict):
         state = input["state"]
         llm_output = state["llm_output"]
+        tool_calls = state.get("tool_calls") or []
         tool_result = ""
-        action = None
 
-        try:
-            # Extract JSON from LLM output
-            json_start = llm_output.find("{")
-            json_str = llm_output[json_start:] if json_start >= 0 else ""
-            # raw_decode reads the first complete JSON object and ignores anything
-            # after it, e.g. a closing ``` fence or extra sentences from the model.
-            parsed, _ = json.JSONDecoder().raw_decode(json_str)
+        if not tool_calls:
+            # No tool needed: the model's text is the reply.
+            final_output = llm_output or FALLBACK_REPLY
+        elif tool_calls[0]["name"] not in tools:
+            # The model called a tool that doesn't exist; don't run anything.
+            final_output = llm_output or FALLBACK_REPLY
+        else:
+            call = tool_calls[0]  # one tool per turn
+            action = call["name"]
+            # Small models sometimes send a phone number as a number, not text.
+            args = {k: str(v) for k, v in (call.get("args") or {}).items()}
+            try:
+                tool_result = tools[action].invoke(args)
+            except Exception as e:  # e.g. a required argument is missing
+                tool_result = f"❌ Invalid tool arguments: {e}"
 
-            action = parsed.get("action")
-            tool_input = parsed.get("input")
-
-            if action and action in tools:
-                result = tools[action](tool_input)
-
-                # Format human-friendly output based on action
-                if action == "create_complaint_tool":
-                    # Only claim success if the tool actually returned an ID,
-                    # e.g. "✅ Complaint created successfully (ID: 1DCE63BD)".
-                    match = re.search(r"\(ID: ([A-Z0-9]+)\)", result)
-                    if match:
-                        final_output = f"✅ Your complaint has been registered successfully. We’ll get back to you shortly. Here is your complaint ID: {match.group(1)}"
-                    else:
-                        final_output = "❌ Sorry, I couldn't register your complaint. Please check your name, 10-digit phone number, email and complaint details, and try again."
-                elif action == "get_complaint_tool":
-                    if "Complaint ID" in result:
-                        # Extract & format details nicely
-                        lines = result.splitlines()
-                        details = "\n".join(lines[1:])  # Skip first line
-                        final_output = f"Here are the details of your complaint:\n\n{details}"
-                    else:
-                        final_output = "❌ Sorry, I couldn't find a complaint with that ID. Please double-check and try again."
+            # Format a human-friendly reply from the tool result.
+            if action == "create_complaint_tool":
+                # Only claim success if the tool actually returned an ID,
+                # e.g. "✅ Complaint created successfully (ID: 1DCE63BD)".
+                match = re.search(r"\(ID: ([A-Z0-9]+)\)", tool_result)
+                if match:
+                    final_output = f"✅ Your complaint has been registered successfully. We’ll get back to you shortly. Here is your complaint ID: {match.group(1)}"
                 else:
-                    final_output = result
-            else:
-                # JSON parsed but no valid action found
-                final_output = state["llm_output"]  # Continue as normal response
-
-        except json.JSONDecodeError:
-            # Not a tool call — just proceed with LLM output as response
-            final_output = state["llm_output"]
-
-        except Exception as e:
-            final_output = "⚠️ Something went wrong while processing your request. Please try again later."
+                    final_output = "❌ Sorry, I couldn't register your complaint. Please check your name, 10-digit phone number, email and complaint details, and try again."
+            else:  # get_complaint_tool
+                if "Complaint ID" in tool_result:
+                    details = "\n".join(tool_result.splitlines()[1:])  # skip the ID line
+                    final_output = f"Here are the details of your complaint:\n\n{details}"
+                else:
+                    final_output = "❌ Sorry, I couldn't find a complaint with that ID. Please double-check and try again."
 
         return {
             "state": {
